@@ -1,0 +1,94 @@
+{
+  "name": "azure-event-hub-explorer",
+  "displayName": "Azure Event Hub Explorer",
+  "description": "Azure Event Hub Management.",
+  "version": "0.0.1",
+  "publisher": "Summer",
+  "engines": {
+    "vscode": "^1.15.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*",
+    "onCommand:azure-event-hub-explorer.sendMessageToEventHub",
+    "onCommand:azure-event-hub-explorer.startMonitorEventHubMessage",
+    "onCommand:azure-event-hub-explorer.stopMonitorEventHubMessage"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [{
+        "command": "azure-event-hub-explorer.sendMessageToEventHub",
+        "title": "Send Message To Event Hub"
+      },
+      {
+        "command": "azure-event-hub-explorer.startMonitorEventHubMessage",
+        "title": "Start Monitoring Event Hub Message"
+      },
+      {
+        "command": "azure-event-hub-explorer.stopMonitorEventHubMessage",
+        "title": "Stop Monitoring Event Hub Message"
+      }
+    ],
+    "menus": {
+      "editor/context": [{
+          "command": "azure-event-hub-explorer.sendMessageToEventHub",
+          "group": "azure-event-hub-explorer@1"
+        },
+        {
+          "command": "azure-event-hub-explorer.startMonitorEventHubMessage",
+          "group": "azure-event-hub-explorer@2"
+        },
+        {
+          "command": "azure-event-hub-explorer.stopMonitorEventHubMessage",
+          "group": "azure-event-hub-explorer@3"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Azure Event Hub Explorer Configuration",
+      "properties": {
+        "azure-event-hub-explorer.eventHubConnectionString": {
+          "type": "string",
+          "default": "<< fill in the event hub connection string >>",
+          "description": "Event Hub Connection String"
+        },
+        "azure-event-hub-explorer.eventHubConsumerGroup": {
+          "type": "string",
+          "default": "$Default",
+          "description": "Event Hub Consumer Group"
+        },
+        "azure-event-hub-explorer.eventHubPath": {
+          "type": "string",
+          "default": "<< fill in the event hub path >>",
+          "description": "Event Hub Path"
+        },
+        "azure-event-hub-explorer.showVerboseMessage": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether or not to show verbose info when monitoring event hub."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "tslint": "tslint -t verbose src/**/*.ts",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "mocha": "^2.3.3",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
+  },
+  "dependencies": {
+    "azure-event-hubs": "0.0.8",
+    "azure-iot-device": "^1.1.17"
+  }
+}
