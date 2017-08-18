@@ -1,0 +1,1 @@
+# vscode-azure-event-hub-explorer
