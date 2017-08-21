@@ -2,7 +2,7 @@
   "name": "azure-event-hub-explorer",
   "displayName": "Azure Event Hub Explorer",
   "description": "Azure Event Hub Management.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "Summer",
   "bugs": {
     "url": "https://github.com/summersun/vscode-azure-event-hub-explorer/issues",
@@ -19,6 +19,13 @@
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "azure",
+    "iot",
+    "event hub",
+    "explorer",
+    "cloud"
   ],
   "activationEvents": [
     "*",
