@@ -4,6 +4,16 @@
   "description": "Azure Event Hub Management.",
   "version": "0.0.1",
   "publisher": "Summer",
+  "bugs": {
+    "url": "https://github.com/summersun/vscode-azure-event-hub-explorer/issues",
+    "email": "victoriasqq@gmail.com"
+  },
+  "homepage": "https://github.com/summersun/vscode-azure-event-hub-explorer/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/summersun/vscode-azure-event-hub-explorer.git"
+  },
+  "icon": "logo.png",
   "engines": {
     "vscode": "^1.15.0"
   },
