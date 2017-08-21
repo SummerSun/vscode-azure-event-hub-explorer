@@ -3,8 +3,8 @@
 import * as vscode from "vscode";
 import { Client as EventHubClient, Sender as EventHubSender } from "azure-event-hubs";
 import { Client, Message } from "azure-iot-device";
-import { Utility } from './utility';
 import { Constants } from './constants';
+import { Utility } from './utility';
 
 export class EventHubExplorer {
     private _outputChannel: vscode.OutputChannel;
@@ -32,15 +32,26 @@ export class EventHubExplorer {
                         .then(client.getPartitionIds.bind(client))
                         .then(() => client.createSender())
                         .then((sender: EventHubSender) => { return sender.send(message); })
-                        .then(this.sendToEventHubSuccess(client));
+                        .then(() => {
+                            this._outputChannel.appendLine('[Azure Event Hub Explorer] Success > Message send to event hub');
+                            client.close();
+                            client = null;
+                        });
                 } catch (e) {
-                    this.sendToEventHubFail(client, e);
+                    this._outputChannel.appendLine('[Azure Event Hub Explorer] Error > Failed to send message to event hub');
+                    this._outputChannel.appendLine(e.toString());
+                    client.close();
+                    client = null;
                 }
             }
         });
     }
 
     public async startMonitorEventHubMessage() {
+        if (this._eventHubClient !== undefined && this._eventHubClient !== null) {
+            this._outputChannel.appendLine('[Azure Event Hub Explorer] Monitoring job is running');
+            return;
+        }
         let eventHubConnectionString = await Utility.getConfigById(Constants.EventHubConnectionStringId, Constants.EventHubConnectionStringTitle);
         let eventHubPath = await Utility.getConfigById(Constants.EventHubPathId, Constants.EventHubPathTitle);
         let consumerGroup = await Utility.getConfigById(Constants.EventHubConsumerGroupId, Constants.EventHubConsumerGroupTitle);
@@ -69,26 +80,7 @@ export class EventHubExplorer {
                             receiver.on("errorReceived", (err) => {
                                 this._outputChannel.appendLine(`[Azure Event Hub Explorer] Error: ${err.message}`)
                             });
-                            receiver.on("message", (message) => {
-                                let showVerboseMessage = Utility.getConfigById(Constants.ShowVerboseMessageId, Constants.ShowVerboseMessageTitle);
-                                let result;
-                                if (showVerboseMessage) {
-                                    result = {
-                                        body: message.body,
-                                        enqueuedTimeUtc: message.enqueuedTimeUtc,
-                                        offset: message.offset,
-                                        partitionKey: message.partitionKey,
-                                        properties: message.properties,
-                                        sequenceNumber: message.sequenceNumber,
-                                        systemProperties: message.systemProperties,
-                                    };
-                                    result.body = Utility.getStringFromCharCode(message.body);
-                                } else {
-                                    result = Utility.getStringFromCharCode(message.body);
-                                }
-                                this._outputChannel.appendLine("[Azure Event Hub Explorer] Message Received:");
-                                this._outputChannel.appendLine(JSON.stringify(result, null, 2));
-                            });
+                            receiver.on("message", (message) => { this.printMessage("[Azure Event Hub Explorer] Message Received:", message); });
                         });
                 });
             });
@@ -104,18 +96,24 @@ export class EventHubExplorer {
         this._eventHubClient = null;
     }
 
-    private sendToEventHubFail(client: EventHubClient, err): void {
-        this._outputChannel.appendLine('[Azure Event Hub Explorer] Error > Failed to send message to event hub');
-        this._outputChannel.appendLine(err.toString());
-        client.close();
-        client = null;
-    }
-
-    private sendToEventHubSuccess(client: EventHubClient) {
-        return () => {
-            this._outputChannel.appendLine('[Azure Event Hub Explorer] Success > Message send to event hub');
-            client.close();
-            client = null;
-        };
+    private printMessage(prefix: string, message) {
+        let showVerboseMessage = Utility.getConfigById(Constants.ShowVerboseMessageId, Constants.ShowVerboseMessageTitle);
+        let result;
+        if (showVerboseMessage) {
+            result = {
+                body: message.body,
+                enqueuedTimeUtc: message.enqueuedTimeUtc,
+                offset: message.offset,
+                partitionKey: message.partitionKey,
+                properties: message.properties,
+                sequenceNumber: message.sequenceNumber,
+                systemProperties: message.systemProperties,
+            };
+            result.body = Utility.getStringFromCharCode(message.body);
+        } else {
+            result = Utility.getStringFromCharCode(message.body);
+        }
+        this._outputChannel.appendLine(prefix);
+        this._outputChannel.appendLine(JSON.stringify(result, null, 2));
     }
 }
