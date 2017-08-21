@@ -77,9 +77,7 @@ export class EventHubExplorer {
                     return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: Date.now() })
                         .then((receiver) => {
                             this._outputChannel.appendLine(`[Azure Event Hub Explorer] Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
-                            receiver.on("errorReceived", (err) => {
-                                this._outputChannel.appendLine(`[Azure Event Hub Explorer] Error: ${err.message}`)
-                            });
+                            receiver.on("errorReceived", (err) => { this._outputChannel.appendLine(`[Azure Event Hub Explorer] Error: ${err.message}`) });
                             receiver.on("message", (message) => { this.printMessage("[Azure Event Hub Explorer] Message Received:", message); });
                         });
                 });
@@ -96,12 +94,12 @@ export class EventHubExplorer {
         this._eventHubClient = null;
     }
 
-    private printMessage(prefix: string, message) {
-        let showVerboseMessage = Utility.getConfigById(Constants.ShowVerboseMessageId, Constants.ShowVerboseMessageTitle);
+    private async printMessage(prefix: string, message) {
+        let showVerboseMessage = await Utility.getConfigById(Constants.ShowVerboseMessageId, Constants.ShowVerboseMessageTitle);
         let result;
-        if (showVerboseMessage) {
+        if (showVerboseMessage === 'true') {
             result = {
-                body: message.body,
+                body: Utility.getStringFromCharCode(message.body),
                 enqueuedTimeUtc: message.enqueuedTimeUtc,
                 offset: message.offset,
                 partitionKey: message.partitionKey,
@@ -109,7 +107,6 @@ export class EventHubExplorer {
                 sequenceNumber: message.sequenceNumber,
                 systemProperties: message.systemProperties,
             };
-            result.body = Utility.getStringFromCharCode(message.body);
         } else {
             result = Utility.getStringFromCharCode(message.body);
         }
