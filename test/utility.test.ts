@@ -5,7 +5,8 @@ import { Utility } from "../src/utility";
 suite("Utility Tests ", () => {
 
     test("should be able to get config", () => {
-        let showVerboseMessage = Utility.getConfigById('showVerboseMessage','Test');
-        assert.equal(showVerboseMessage, false);
+        Utility.getConfigById('showVerboseMessage', 'Test').then((showVerboseMessage) => {
+            assert.equal(showVerboseMessage, false);
+        });
     });
 });
