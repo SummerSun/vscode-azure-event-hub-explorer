@@ -18,13 +18,13 @@
     "vscode": "^1.15.0"
   },
   "categories": [
-    "Other"
+    "Azure"
   ],
   "keywords": [
     "azure",
     "iot",
     "event hub",
-    "explorer",
+    "eventhub",
     "cloud"
   ],
   "activationEvents": [
