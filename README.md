@@ -63,7 +63,3 @@ Submit [issues](https://github.com/summersun/vscode-azure-event-hub-explorer/iss
 
 ## Contribution
 Fork the [repo](https://github.com/summersun/vscode-azure-event-hub-explorer) and submit pull requests.
-
-### 0.0.1
-
-Initial release of Azure Event Hub Explorer.
