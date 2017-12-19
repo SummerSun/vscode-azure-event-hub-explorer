@@ -10,9 +10,11 @@ This is a vscode extension to send message to or monitor messages in Azure Event
 
 ### Prerequisites
 
-Required configurations include:
+Required configurations:
 - eventHubConnectionString
-- eventHubPath
+- entityPath
+
+Optional configurations:
 - eventHubConsumerGroup
 - showVerboseMessage
 
@@ -40,7 +42,7 @@ To set the Event Hub Connection String:
 To set the Event Hub Path:
 ```json
 {
-    "azure-event-hub-explorer.eventHubPath": "{Event Hub path/name}"
+    "azure-event-hub-explorer.entityPath": "{Event Hub entity path}"
 }
 ```
 

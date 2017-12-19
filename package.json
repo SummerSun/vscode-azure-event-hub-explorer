@@ -15,7 +15,7 @@
   },
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.15.0"
+    "vscode": "^1.18.0"
   },
   "categories": [
     "Azure"
@@ -35,31 +35,36 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [{
+    "commands": [
+      {
         "command": "azure-event-hub-explorer.sendMessageToEventHub",
-        "title": "Send Message To Event Hub"
+        "title": "Send Message To Event Hub",
+        "category": "EventHub"
       },
       {
         "command": "azure-event-hub-explorer.startMonitorEventHubMessage",
-        "title": "Start Monitoring Event Hub Message"
+        "title": "Start Monitoring Event Hub Message",
+        "category": "EventHub"
       },
       {
         "command": "azure-event-hub-explorer.stopMonitorEventHubMessage",
-        "title": "Stop Monitoring Event Hub Message"
+        "title": "Stop Monitoring Event Hub Message",
+        "category": "EventHub"
       }
     ],
     "menus": {
-      "editor/context": [{
+      "editor/context": [
+        {
           "command": "azure-event-hub-explorer.sendMessageToEventHub",
-          "group": "azure-event-hub-explorer@1"
+          "group": "azure-event-hub-explorer@0"
         },
         {
           "command": "azure-event-hub-explorer.startMonitorEventHubMessage",
-          "group": "azure-event-hub-explorer@2"
+          "group": "azure-event-hub-explorer@1"
         },
         {
           "command": "azure-event-hub-explorer.stopMonitorEventHubMessage",
-          "group": "azure-event-hub-explorer@3"
+          "group": "azure-event-hub-explorer@2"
         }
       ]
     },
@@ -77,10 +82,10 @@
           "default": "$Default",
           "description": "Event Hub Consumer Group"
         },
-        "azure-event-hub-explorer.eventHubPath": {
+        "azure-event-hub-explorer.entityPath": {
           "type": "string",
           "default": "<< fill in the event hub path >>",
-          "description": "Event Hub Path"
+          "description": "Event Hub Entity Path"
         },
         "azure-event-hub-explorer.showVerboseMessage": {
           "type": "boolean",

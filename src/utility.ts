@@ -4,6 +4,10 @@ import * as vscode from 'vscode';
 
 export class Utility {
 
+    public static getConfiguration(): vscode.WorkspaceConfiguration {
+        return vscode.workspace.getConfiguration("azure-event-hub-explorer");
+    }
+
     public static getStringFromCharCode(source) {
         if (source instanceof Uint8Array) {
             try {
