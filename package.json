@@ -1,8 +1,8 @@
 {
   "name": "azure-event-hub-explorer",
   "displayName": "Azure Event Hub Explorer",
-  "description": "Azure Event Hub Management.",
-  "version": "0.0.4",
+  "description": "Azure Event Hub Management, select an event hub, send messages to eventhub, monitor eventhub etc.",
+  "version": "0.1.0",
   "publisher": "Summer",
   "bugs": {
     "url": "https://github.com/summersun/vscode-azure-event-hub-explorer/issues",
@@ -15,49 +15,67 @@
   },
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.15.0"
+    "vscode": "^1.19.0"
   },
   "categories": [
     "Azure"
   ],
   "keywords": [
     "azure",
-    "iot",
     "event hub",
     "eventhub",
     "cloud"
   ],
   "activationEvents": [
     "*",
+    "onCommand:azure-event-hub-explorer.selectEventHub",
     "onCommand:azure-event-hub-explorer.sendMessageToEventHub",
     "onCommand:azure-event-hub-explorer.startMonitorEventHubMessage",
     "onCommand:azure-event-hub-explorer.stopMonitorEventHubMessage"
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [{
+    "commands": [
+      {
+        "command": "azure-event-hub-explorer.selectEventHub",
+        "title": "Select Event Hub",
+        "category": "EventHub"
+      },
+      {
         "command": "azure-event-hub-explorer.sendMessageToEventHub",
-        "title": "Send Message To Event Hub"
+        "title": "Send Message To Event Hub",
+        "category": "EventHub"
       },
       {
         "command": "azure-event-hub-explorer.startMonitorEventHubMessage",
-        "title": "Start Monitoring Event Hub Message"
+        "title": "Start Monitoring Event Hub Message",
+        "category": "EventHub"
       },
       {
         "command": "azure-event-hub-explorer.stopMonitorEventHubMessage",
-        "title": "Stop Monitoring Event Hub Message"
+        "title": "Stop Monitoring Event Hub Message",
+        "category": "EventHub"
       }
     ],
     "menus": {
-      "editor/context": [{
+      "editor/context": [
+        {
+          "when": "inOutput",
+          "command": "azure-event-hub-explorer.selectEventHub",
+          "group": "azure-event-hub-explorer@0"
+        },
+        {
+          "when": "inOutput",
           "command": "azure-event-hub-explorer.sendMessageToEventHub",
           "group": "azure-event-hub-explorer@1"
         },
         {
+          "when": "inOutput",
           "command": "azure-event-hub-explorer.startMonitorEventHubMessage",
           "group": "azure-event-hub-explorer@2"
         },
         {
+          "when": "inOutput",
           "command": "azure-event-hub-explorer.stopMonitorEventHubMessage",
           "group": "azure-event-hub-explorer@3"
         }
@@ -77,10 +95,10 @@
           "default": "$Default",
           "description": "Event Hub Consumer Group"
         },
-        "azure-event-hub-explorer.eventHubPath": {
+        "azure-event-hub-explorer.eventHubEntityName": {
           "type": "string",
-          "default": "<< fill in the event hub path >>",
-          "description": "Event Hub Path"
+          "default": "<< fill in the event hub entity name >>",
+          "description": "Event Hub Entity Name"
         },
         "azure-event-hub-explorer.showVerboseMessage": {
           "type": "boolean",
@@ -98,14 +116,20 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "typescript": "^2.0.3",
+    "typescript": "^2.2.1",
     "vscode": "^1.0.0",
     "mocha": "^2.3.3",
     "@types/node": "^6.0.40",
     "@types/mocha": "^2.2.32"
   },
   "dependencies": {
+    "azure-arm-eventhub": "^1.1.0-preview",
+    "azure-arm-resource": "^3.0.0-preview",
     "azure-event-hubs": "0.0.8",
-    "azure-iot-device": "^1.1.17"
-  }
+    "ms-rest": "^2.3.0",
+    "ms-rest-azure": "^2.4.5"
+  },
+  "extensionDependencies": [
+    "ms-vscode.azure-account"
+  ]
 }
