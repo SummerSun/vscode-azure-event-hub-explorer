@@ -3,6 +3,9 @@
 import * as vscode from 'vscode';
 
 export class Utility {
+    public static getConfiguration(): vscode.WorkspaceConfiguration {
+        return vscode.workspace.getConfiguration('azure-event-hub-explorer');
+    }
 
     public static getStringFromCharCode(source) {
         if (source instanceof Uint8Array) {
@@ -20,7 +23,7 @@ export class Utility {
         if (!value || value.startsWith('<<')) {
             return await vscode.window.showInputBox({
                 prompt: `${name}`,
-                placeHolder: `Please config ${name}`
+                placeHolder: `Run command: EventHub: Select Event Hub first, or config the ${name} in settings`
             }).then((v: string) => {
                 if (v !== undefined) {
                     config.update(id, v, true);
