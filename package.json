@@ -2,7 +2,7 @@
   "name": "azure-event-hub-explorer",
   "displayName": "Azure Event Hub Explorer",
   "description": "Azure Event Hub Management, select an event hub, send messages to eventhub, monitor eventhub etc.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "Summer",
   "bugs": {
     "url": "https://github.com/summersun/vscode-azure-event-hub-explorer/issues",
