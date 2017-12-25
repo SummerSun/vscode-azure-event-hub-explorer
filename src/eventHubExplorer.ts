@@ -8,8 +8,6 @@ import { SubscriptionItem } from './subscriptionItem';
 import { Client as EventHubClient, Sender as EventHubSender } from "azure-event-hubs";
 import { SubscriptionClient, ResourceManagementClient } from 'azure-arm-resource';
 import { QuickPickItem, commands } from 'vscode';
-import { EventHubItem } from './eventHubItem';
-import { EntityItem } from './entityItem';
 
 import EventHubManagementClient = require('azure-arm-eventhub');
 
@@ -27,6 +25,7 @@ export class EventHubExplorer {
     /// <summary>
     /// Eventhub confusing conceptions explaination:
     /// namespaces is general concept of eventhub, eventhubs is general concept of eventhub entity
+    /// select subscription -> select resourceGroup -> select eventHub -> select entity
     /// </summary>
     public async selectEventHub() {
         if (!(await this.accountApi.waitForLogin())) {
@@ -34,25 +33,33 @@ export class EventHubExplorer {
 		}
         const subscriptions = this.loadSubscriptions();
         const subscription = await vscode.window.showQuickPick(subscriptions, { placeHolder: "select a subscription", ignoreFocusOut: true });
+
         if(subscription) {
             const resourceGroups = await this.loadResourceGroups(subscription);
             const resourceGroup = await vscode.window.showQuickPick(resourceGroups, { placeHolder: "select a resoruce group", ignoreFocusOut: true });
+
             if(resourceGroup)
             {
                 this.eventHubManagementClient = new EventHubManagementClient(subscription.credentials, subscription.id);
-                const eventhubs: EventHubItem[]= [];
-                var list = await this.eventHubManagementClient.namespaces.list();
-                eventhubs.push(...list.map(e => new EventHubItem(e)));            
-                const eventhub = await vscode.window.showQuickPick(eventhubs, { placeHolder: "select an eventhub", ignoreFocusOut: true });  
-                if(eventhub)          
+                var namespaces = await this.eventHubManagementClient.namespaces.list();
+                const eventHub = await vscode.window.showQuickPick(namespaces.map(namespace => ({
+                    label: namespace.name,
+                    description: ''
+                })), { placeHolder: "select an event hub", ignoreFocusOut: true });  
+
+                if(eventHub)
                 {
-                    var entities = await this.eventHubManagementClient.eventHubs.listByNamespace(resourceGroup.label, eventhub.label);
-                    const entity = await vscode.window.showQuickPick(entities.map(entity => new EntityItem(entity.name)), { placeHolder: "select an event hub entity", ignoreFocusOut: true });
+                    const entities = await this.eventHubManagementClient.eventHubs.listByNamespace(resourceGroup.label, eventHub.label);
+                    const entity = await vscode.window.showQuickPick(entities.map(entity =>({
+                        label: entity.name,
+                        description: ''
+                    })), { placeHolder: "select an event hub entity", ignoreFocusOut: true });
+
                     if(entity)
                     {
                         const config = Utility.getConfiguration();
-                        var eventhubConnnectionString = (await this.eventHubManagementClient.namespaces.listKeys(resourceGroup.label, eventhub.label, Constants.AuthorizationRule)).primaryConnectionString;
-                        await config.update(Constants.EventHubConnectionStringId, eventhubConnnectionString, true);
+                        var keys = await this.eventHubManagementClient.namespaces.listKeys(resourceGroup.label, eventHub.label, Constants.AuthorizationRule);
+                        await config.update(Constants.EventHubConnectionStringId, keys.primaryConnectionString, true);
                         await config.update(Constants.EventHubEntityName, entity.label, true);
                     }
                 }
@@ -63,11 +70,10 @@ export class EventHubExplorer {
     private async loadResourceGroups(subscription: SubscriptionItem) {
         const resources = new ResourceManagementClient(subscription.credentials, subscription.id);
         const resourceGroups = await resources.resourceGroups.list();
-        resourceGroups.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        resourceGroups.sort((a, b) => (a.name).localeCompare(b.name));
         return resourceGroups.map(resourceGroup => ({
-            label: resourceGroup.name || '',
+            label: resourceGroup.name,
             description: resourceGroup.location,
-            resourceGroup
         }));
     }
 
