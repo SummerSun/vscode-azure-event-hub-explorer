@@ -11,9 +11,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('azure-event-hub-explorer.sendMessageToEventHub', () => { eventHubExplorer.sendMessageToEventHub(); }));
 
   context.subscriptions.push(vscode.commands.registerCommand('azure-event-hub-explorer.startMonitorEventHubMessage', () => { eventHubExplorer.startMonitorEventHubMessage(); }));
-  
+
   context.subscriptions.push(vscode.commands.registerCommand('azure-event-hub-explorer.stopMonitorEventHubMessage', () => { eventHubExplorer.stopMonitorEventHubMessage(); }));
 
 }
 
-export function deactivate() {}
+export function deactivate() { }

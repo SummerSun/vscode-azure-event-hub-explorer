@@ -29,34 +29,27 @@ export class EventHubExplorer {
     /// </summary>
     public async selectEventHub() {
         if (!(await this.accountApi.waitForLogin())) {
-			return vscode.commands.executeCommand('azure-account.askForLogin');
-		}
+            return vscode.commands.executeCommand('azure-account.askForLogin');
+        }
         const subscriptions = this.loadSubscriptions();
         const subscription = await vscode.window.showQuickPick(subscriptions, { placeHolder: "select a subscription", ignoreFocusOut: true });
 
-        if(subscription) {
+        if (subscription) {
             const resourceGroups = await this.loadResourceGroups(subscription);
             const resourceGroup = await vscode.window.showQuickPick(resourceGroups, { placeHolder: "select a resoruce group", ignoreFocusOut: true });
 
-            if(resourceGroup)
-            {
+            if (resourceGroup) {
                 this.eventHubManagementClient = new EventHubManagementClient(subscription.credentials, subscription.id);
                 var namespaces = await this.eventHubManagementClient.namespaces.list();
-                const eventHub = await vscode.window.showQuickPick(namespaces.map(namespace => ({
-                    label: namespace.name,
-                    description: ''
-                })), { placeHolder: "select an event hub", ignoreFocusOut: true });  
+                const eventHub = await vscode.window.showQuickPick(namespaces.map(namespace => ({ label: namespace.name, description: '' })),
+                    { placeHolder: "select an event hub", ignoreFocusOut: true });
 
-                if(eventHub)
-                {
+                if (eventHub) {
                     const entities = await this.eventHubManagementClient.eventHubs.listByNamespace(resourceGroup.label, eventHub.label);
-                    const entity = await vscode.window.showQuickPick(entities.map(entity =>({
-                        label: entity.name,
-                        description: ''
-                    })), { placeHolder: "select an event hub entity", ignoreFocusOut: true });
+                    const entity = await vscode.window.showQuickPick(entities.map(entity => ({ label: entity.name, description: '' })),
+                        { placeHolder: "select an event hub entity", ignoreFocusOut: true });
 
-                    if(entity)
-                    {
+                    if (entity) {
                         const config = Utility.getConfiguration();
                         var keys = await this.eventHubManagementClient.namespaces.listKeys(resourceGroup.label, eventHub.label, Constants.AuthorizationRule);
                         await config.update(Constants.EventHubConnectionStringId, keys.primaryConnectionString, true);
@@ -71,18 +64,15 @@ export class EventHubExplorer {
         const resources = new ResourceManagementClient(subscription.credentials, subscription.id);
         const resourceGroups = await resources.resourceGroups.list();
         resourceGroups.sort((a, b) => (a.name).localeCompare(b.name));
-        return resourceGroups.map(resourceGroup => ({
-            label: resourceGroup.name,
-            description: resourceGroup.location,
-        }));
+        return resourceGroups.map(resourceGroup => ({ label: resourceGroup.name, description: resourceGroup.location, }));
     }
 
     private async loadSubscriptions() {
         const subscriptions: SubscriptionItem[] = [];
-        for(const session of this.accountApi.sessions) {
+        for (const session of this.accountApi.sessions) {
             const client = new SubscriptionClient(session.credentials);
             const list = await client.subscriptions.list();
-			subscriptions.push(...list.map(subscription => new SubscriptionItem(subscription, session)));
+            subscriptions.push(...list.map(subscription => new SubscriptionItem(subscription, session)));
         }
         subscriptions.sort((a, b) => a.label.localeCompare(b.label));
         return subscriptions;
@@ -90,7 +80,7 @@ export class EventHubExplorer {
 
     public async sendMessageToEventHub() {
         let eventHubConnectionString = await Utility.getConfigById(Constants.EventHubConnectionStringId, Constants.EventHubConnectionStringTitle);
-        if(!eventHubConnectionString) {
+        if (!eventHubConnectionString) {
             return;
         }
         let entity = await Utility.getConfigById(Constants.EventHubEntityName, Constants.EventHubEntityTitle);
@@ -105,8 +95,7 @@ export class EventHubExplorer {
                 try {
                     this._outputChannel.show();
                     this._outputChannel.appendLine('Azure Event Hub Explorer > Sending message to event hub...');
-                    client.open()
-                        .then(client.getPartitionIds.bind(client))
+                    client.open().then(client.getPartitionIds.bind(client))
                         .then(() => client.createSender())
                         .then((sender: EventHubSender) => { return sender.send(message); })
                         .then(() => {
@@ -124,19 +113,19 @@ export class EventHubExplorer {
         });
     }
 
-    
+
     public async startMonitorEventHubMessage() {
         if (this._eventHubClient !== undefined && this._eventHubClient !== null) {
             this._outputChannel.appendLine('Azure Event Hub Explorer > Monitoring job is running');
             return;
         }
         let eventHubConnectionString = await Utility.getConfigById(Constants.EventHubConnectionStringId, Constants.EventHubConnectionStringTitle);
-        if(!eventHubConnectionString) {
+        if (!eventHubConnectionString) {
             this._outputChannel.appendLine('eventHubConnectionString not defined. Run selectEventHub to select your event hub first');
             return;
         }
         let eventHubPath = await Utility.getConfigById(Constants.EventHubEntityName, Constants.EventHubEntityTitle);
-        if(!eventHubPath) {
+        if (!eventHubPath) {
             this._outputChannel.appendLine('eventHubPath not defined. Run selectEventHub to select your event hub first');
             return;
         }

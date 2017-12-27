@@ -18,7 +18,7 @@ export class Utility {
     }
 
     public static async getConfigById(id: string, name: string) {
-        let config =  vscode.workspace.getConfiguration('azure-event-hub-explorer');
+        let config = vscode.workspace.getConfiguration('azure-event-hub-explorer');
         let value = config.get<string>(id);
         if (!value || value.startsWith('<<')) {
             return await vscode.window.showInputBox({
