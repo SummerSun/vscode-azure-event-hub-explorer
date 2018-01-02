@@ -23,7 +23,9 @@ This is a vscode extension to send message to or monitor messages in Azure Event
 
 You could directly run `EventHub: Select Event Hub` to set the event hub connectionstring and entity path you want to work with.
 
-Otherwise, it will prompt for you to set them manually in settings when you try to send message to event hub or monitor event hub messages.
+Otherwise, it will prompt for you to set manually in settings when you try to send message to event hub or monitor event hub messages.
+
+EventHubConnectionString:
 
 ```json
 {
@@ -31,18 +33,25 @@ Otherwise, it will prompt for you to set them manually in settings when you try 
 }
 ```
 
+EntityName:
+
 ```json
 {
-    "azure-event-hub-explorer.eventHubPath": "{Event Hub path/name}"
+    "azure-event-hub-explorer.eventHubEntityName": "{entityName}"
 }
 ```
 
 Those two settings are optional.  eventHubConsumerGroup default is "$Default", and showVerboseMessage default to false.
+
+EventHubConsumerGroup:
+
 ```json
 {
     "azure-event-hub-explorer.eventHubConsumerGroup": "$Default"
 }
 ```
+
+ShowVerboseMessage:
 
 ```json
 {
