@@ -143,12 +143,16 @@ export class EventHubExplorer {
         }
     }
 
-    private startMonitor(connectionString: string, path: string, consumerGroup: string): void {
+    private async startMonitor(connectionString: string, path: string, consumerGroup: string) {
+        let config = vscode.workspace.getConfiguration('azure-event-hub-explorer');
+        let startAfterTimeString = config.get<string>("startAfterTime");
+        let startAfterTime = startAfterTimeString ? Date.parse(startAfterTimeString) : Date.now();
+
         this._eventHubClient = EventHubClient.fromConnectionString(connectionString, path);
         this._eventHubClient.open().then(this._eventHubClient.getPartitionIds.bind(this._eventHubClient))
             .then((partitionIds: any) => {
                 return partitionIds.map((partitionId) => {
-                    return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: Date.now() })
+                    return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: startAfterTime })
                         .then((receiver) => {
                             this._outputChannel.appendLine(`Azure Event Hub Explorer > Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
                             receiver.on("errorReceived", (err) => { this._outputChannel.appendLine(`Azure Event Hub Explorer > Error: ${err.message}`) });
