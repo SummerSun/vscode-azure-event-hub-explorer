@@ -36,7 +36,7 @@ export class EventHubExplorer {
 
         if (subscription) {
             const resourceGroups = await this.loadResourceGroups(subscription);
-            const resourceGroup = await vscode.window.showQuickPick(resourceGroups, { placeHolder: "select a resoruce group", ignoreFocusOut: true });
+            const resourceGroup = await vscode.window.showQuickPick(resourceGroups, { placeHolder: "select a resource group", ignoreFocusOut: true });
 
             if (resourceGroup) {
                 this.eventHubManagementClient = new EventHubManagementClient(subscription.credentials, subscription.id);
