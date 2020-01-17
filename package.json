@@ -104,6 +104,11 @@
           "type": "boolean",
           "default": false,
           "description": "Whether or not to show verbose info when monitoring event hub."
+        },
+        "azure-event-hub-explorer.startAfterTime": {
+          "type": "string",
+          "default": "",
+          "description": "Start to receive messages after this time - let it empty for now. (2011-10-10T14:48:00)"
         }
       }
     }
