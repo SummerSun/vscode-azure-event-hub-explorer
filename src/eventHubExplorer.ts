@@ -7,7 +7,6 @@ import { AzureAccount } from './azure-account.api';
 import { SubscriptionItem } from './subscriptionItem';
 import { Client as EventHubClient, Sender as EventHubSender } from "azure-event-hubs";
 import { SubscriptionClient, ResourceManagementClient } from 'azure-arm-resource';
-import { QuickPickItem, commands } from 'vscode';
 
 import EventHubManagementClient = require('azure-arm-eventhub');
 
