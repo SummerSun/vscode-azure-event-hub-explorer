@@ -27,7 +27,6 @@
     "cloud"
   ],
   "activationEvents": [
-    "*",
     "onCommand:azure-event-hub-explorer.selectEventHub",
     "onCommand:azure-event-hub-explorer.sendMessageToEventHub",
     "onCommand:azure-event-hub-explorer.startMonitorEventHubMessage",
