@@ -7,7 +7,6 @@ import { AzureAccount } from './azure-account.api';
 import { SubscriptionItem } from './subscriptionItem';
 import { Client as EventHubClient, Sender as EventHubSender } from "azure-event-hubs";
 import { SubscriptionClient, ResourceManagementClient } from 'azure-arm-resource';
-import { QuickPickItem, commands } from 'vscode';
 
 import EventHubManagementClient = require('azure-arm-eventhub');
 
@@ -155,8 +154,8 @@ export class EventHubExplorer {
                     return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: startAfterTime })
                         .then((receiver) => {
                             this._outputChannel.appendLine(`Azure Event Hub Explorer > Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
-                            receiver.on("errorReceived", (err) => { this._outputChannel.appendLine(`Azure Event Hub Explorer > Error: ${err.message}`) });
-                            receiver.on("message", (message) => { this.printMessage("Azure Event Hub Explorer > Message Received:", message); });
+                            receiver.on("errorReceived", (err) => { this._outputChannel.appendLine(`Azure Event Hub Explorer > Partition ${partitionId} > Error: ${err.message}`) });
+                            receiver.on("message", (message) => { this.printMessage(`Azure Event Hub Explorer > Partition ${partitionId} > Message Received:`, message); });
                         });
                 });
             });

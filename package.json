@@ -27,7 +27,6 @@
     "cloud"
   ],
   "activationEvents": [
-    "*",
     "onCommand:azure-event-hub-explorer.selectEventHub",
     "onCommand:azure-event-hub-explorer.sendMessageToEventHub",
     "onCommand:azure-event-hub-explorer.startMonitorEventHubMessage",
@@ -117,17 +116,16 @@
     "vscode:prepublish": "tsc -p ./",
     "compile": "tsc -watch -p ./",
     "tslint": "tslint -t verbose src/**/*.ts",
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "typescript": "^2.2.1",
-    "vscode": "^1.0.0",
-    "mocha": "^2.3.3",
+    "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
-    "@types/mocha": "^2.2.32"
+    "mocha": "^2.3.3",
+    "typescript": "^4.8.4"
   },
   "dependencies": {
+    "@types/vscode": "^1.71.0",
     "azure-arm-eventhub": "^1.1.0-preview",
     "azure-arm-resource": "^3.0.0-preview",
     "azure-event-hubs": "0.0.8",
